@@ -1,0 +1,23 @@
+{
+  "name": "lockers-app-backend",
+  "version": "1.0.0",
+  "description": "This Git repository contains the source code for the backend of a Locker application designed for secure package storage. The application is developed in JavaScript, making use of the following technologies:",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "Rubén Sanz Barrio",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "jwt-simple": "^0.5.6",
+    "moment": "^2.29.4",
+    "mongoose": "^7.5.0"
+  }
+}
