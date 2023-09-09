@@ -18,7 +18,13 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true})); 
 
 //Routes
+const userRoutes = require("./Routes/user");
+const packetRoutes = require("./Routes/packet");
+const lockerRoutes = require("./Routes/locker");
 
+app.use("/api/user", userRoutes);
+app.use("/api/packet", packetRoutes);
+app.use("/api/locker", lockerRoutes);
 
 //Server listens to HTTP Requests
 app.listen(port, () => {
