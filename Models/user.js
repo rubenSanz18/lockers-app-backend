@@ -35,6 +35,10 @@ const UserSchema = Schema({
     packets: {
         type: [Packet],
         default: []
+    },
+    role: {
+        type: String,
+        default: "user_role"
     }
 })
 module.exports = model("User", UserSchema, "users");
