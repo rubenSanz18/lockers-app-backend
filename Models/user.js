@@ -1,7 +1,4 @@
 const {Schema, model} = require("mongoose");
-const City = require("./city");
-const Country = require("./country");
-const Continent = require("./continent");
 
 const UserSchema = Schema({
     firstName: {
@@ -21,19 +18,23 @@ const UserSchema = Schema({
         required: true
     },
     city: {
-        type: City,
+        type: Schema.Types.ObjectId,
+        ref: "City",
         required: true
     },
     country: {
-        type: Country,
+        type: Schema.Types.ObjectId,
+        ref: "Country",
         required: true
     },
     continent: {
-        type: Continent,
+        type: Schema.Types.ObjectId,
+        ref: "Continent",
         required: true
     },
     packets: {
-        type: [Packet],
+        type: Schema.Types.ObjectId,
+        ref: "Packet",
         default: []
     },
     role: {

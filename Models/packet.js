@@ -1,6 +1,4 @@
 const {Schema, model} = require("mongoose");
-const User = require("./user");
-const Locker = require("./locker");
 
 const PacketSchema = Schema({
     weight: {
@@ -12,11 +10,13 @@ const PacketSchema = Schema({
         default: Date.now
     },
     user: {
-        type: User,
+        type: Schema.Types.ObjectId,
+        ref: "User",
         required: true
     },
     locker: {
-        type: Locker,
+        type: Schema.Types.ObjectId,
+        ref: "Locker",
         required: true
     }
 })

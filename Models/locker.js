@@ -1,6 +1,4 @@
 const {Schema, model} = require("mongoose");
-const City = require("./city");
-const Address = require("./address");
 
 const LockerSchema = Schema({
     name: {
@@ -8,11 +6,14 @@ const LockerSchema = Schema({
         required: true
     },
     address: {
-        type: Address,
+        type: Schema.Types.ObjectId,
+        ref: "Address",
         required: true
     },
     city: {
-        type: City
+        type: Schema.Types.ObjectId,
+        ref: "City",
+        required: true
     },
     smallCompartments: {
         type: Number,

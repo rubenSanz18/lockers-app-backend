@@ -1,5 +1,4 @@
 const {Schema, model} = require("mongoose");
-const Country = require("./country");
 
 const CitySchema = Schema({
     name: {
@@ -7,7 +6,8 @@ const CitySchema = Schema({
         required: true
     },
     country: {
-        type: Country,
+        type: Schema.Types.ObjectId,
+        ref: "Country",
         required: true
     },
     numLockers: {

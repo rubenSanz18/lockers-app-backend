@@ -1,5 +1,4 @@
 const {Schema, model} = require("mongoose");
-const Continent = require("./continent");
 
 const CountrySchema = Schema({
     name: {
@@ -7,7 +6,8 @@ const CountrySchema = Schema({
         required: true
     },
     continent: {
-        type: Continent,
+        type: Schema.Types.ObjectId,
+        ref: "Continent",
         required: true
     }
 })
