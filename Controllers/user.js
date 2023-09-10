@@ -115,8 +115,32 @@ const update = (req, res) => {
     })
 }
 
+const getUser = (req, res) => {
+
+    User.findOne({_id: req.user.id})
+        .exec()
+        .then((user) => {
+            if(!user)
+                return res.status(400).json({
+                    status: "Error",
+                    message: "User don't found"
+                })
+            return res.status(200).json({
+                status: "Success",
+                user: user
+            })
+        })
+        .catch((error) => {
+            return res.status(400).json({
+                status: "Error",
+                error
+            })
+        })
+}
+
 module.exports = {
     register,
     login,
-    update
+    update,
+    getUser
 }
