@@ -11,8 +11,11 @@ const LockerSchema = Schema({
         required: true
     },
     city: {
-        type: Schema.Types.ObjectId,
-        ref: "City",
+        type: String,
+        required: true
+    },
+    country: {
+        type: String,
         required: true
     },
     smallCompartments: {
