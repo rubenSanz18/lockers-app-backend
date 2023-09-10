@@ -81,7 +81,42 @@ const login = (req, res) => {
         })
 }
 
+const update = (req, res) => {
+    let toUpdate = req.body;
+    let user = req.user;
+
+    User.find({email: user.email.toLowerCase()})
+    .exec()
+    .then(async (users) => {
+        if(!users)
+            return res.status(404).json({
+                status: "Error",
+                message: "There are not any user using this email"
+            })
+        if(users.length >= 1){
+            if(toUpdate.password){
+                let pwd = await bcrypt.hash(toUpdate.password, 10);
+                toUpdate.password = pwd;
+            }
+            User.findByIdAndUpdate(user.id, toUpdate, {new: true})
+                .then((newUser) => {
+                    return res.status(200).json({
+                        status: "OK",
+                        user: newUser
+                    })
+                })
+                .catch((error) => {
+                    return res.status(500).json({
+                        status: "Error",
+                        error: error
+                    })
+                })
+        }
+    })
+}
+
 module.exports = {
     register,
-    login
+    login,
+    update
 }
