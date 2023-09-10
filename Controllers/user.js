@@ -1,4 +1,6 @@
 const User = require("../Models/user");
+const Packet = require("../Models/packet");
+
 const bcrypt = require("bcrypt")
 const jwt = require("../Services/jwt")
 
@@ -138,9 +140,52 @@ const getUser = (req, res) => {
         })
 }
 
+const deleteUser = (req, res) => {
+
+    User.findOne({_id: req.user.id})
+    .exec()
+    .then((user) => {
+        if(!user)
+            return res.status(404).json({
+                status: "Error",
+                message: "User don't found"
+            })
+        if(user.packets.length > 0){
+            for(let i=0; i<user.packets.length; i++){
+                if(user.packets[i].status !== "Preparing")
+                    return res.status(400).json({
+                        status: "Error",
+                        message: "You can't delete your account because you have deliveries that are prepared"
+                    })
+            }
+        }
+        User.deleteOne({_id: user.id})
+        .exec()
+        .then((deletedUser) => {
+            if(!deletedUser)
+                return res.status(500).json({
+                    status: "Error",
+                    message: "An error has been ocurred"
+                })
+            Packet.deleteMany({userMail: deletedUser.email})
+            return res.status(200).json({
+                status: "Success",
+                message: "Deleted"
+            })
+        })     
+    })
+    .catch((error) => {
+        return res.status(500).json({
+            status: "Error",
+            error: error
+        })
+    })
+}
+
 module.exports = {
     register,
     login,
     update,
-    getUser
+    getUser,
+    deleteUser
 }
