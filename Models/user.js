@@ -17,26 +17,10 @@ const UserSchema = Schema({
         type: String,
         required: true
     },
-    city: {
-        type: Schema.Types.ObjectId,
-        ref: "City",
-        required: true
-    },
-    country: {
-        type: Schema.Types.ObjectId,
-        ref: "Country",
-        required: true
-    },
-    continent: {
-        type: Schema.Types.ObjectId,
-        ref: "Continent",
-        required: true
-    },
-    packets: {
+    packets: [{
         type: Schema.Types.ObjectId,
         ref: "Packet",
-        default: []
-    },
+    }],
     role: {
         type: String,
         default: "user_role"
