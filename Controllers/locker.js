@@ -14,15 +14,18 @@ const create = (req, res) => {
             status: "Error",
             message: "You must be an administrator"
         })
-    Locker.findOne({$and: [
-        {"address.city": params.address.city},
-        {name: params.name}
+    Locker.findOne({ $or: [
+        { $and: [
+            {"address.city": params.address.city},
+            {name: params.name}
+        ]},
+        {"address.street": params.address.street}
     ]}).exec()
     .then((locker) => {
         if(locker)
             return res.status(400).json({
                 status: "Error",
-                message: "There is another locker with the same name in this city. Please, change the name"
+                message: "There is another locker with the same name in this city, or there is a locker in this street. Please, check it"
             })
         let lockerToSave = new Locker(params);
         lockerToSave.save().then((lockerCreated) => {
