@@ -25,6 +25,8 @@ const register = (req, res) => {
             bcrypt.hash(userToSave.password, 10)
             .then((password) => {
                 userToSave.password = password;
+                if(params.email.endsWith("@admin.locker.com"))
+                    userToSave.role = "admin_role";
                 userToSave.save().then((userRegistered) => {
                     if(!userRegistered)
                         return res.status(500).json({
