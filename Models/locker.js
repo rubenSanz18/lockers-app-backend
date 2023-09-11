@@ -6,25 +6,40 @@ const LockerSchema = Schema({
         required: true
     },
     address: {
-        type: Schema.Types.ObjectId,
-        ref: "Address",
-        required: true
-    },
-    city: {
-        type: String,
-        required: true
-    },
-    country: {
-        type: String,
-        required: true
+        street: {
+            type: String,
+            required: true
+        },
+        postalCode: {
+            type: Number,
+            validate: {
+                validator: Number.isInteger,
+                message: 'Debe ser un número entero'
+            },
+            required: true
+        },
+        city: {
+            type: String,
+            required: true
+        },
+        country: {
+            type: String,
+            required: true
+        }
     },
     smallCompartments: {
         type: Number,
-        integer: true
+        validate: {
+            validator: Number.isInteger,
+            message: 'Debe ser un número entero'
+        }
     },
     largeCompartments: {
         type: Number,
-        integer: true
+        validate: {
+            validator: Number.isInteger,
+            message: 'Debe ser un número entero'
+        }
     }
 })
 module.exports = model("Locker", LockerSchema, "lockers");
