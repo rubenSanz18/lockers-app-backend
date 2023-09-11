@@ -14,7 +14,7 @@ const LockerSchema = Schema({
             type: Number,
             validate: {
                 validator: Number.isInteger,
-                message: 'Debe ser un número entero'
+                message: 'It must be an integer number'
             },
             required: true
         },
@@ -31,15 +31,17 @@ const LockerSchema = Schema({
         type: Number,
         validate: {
             validator: Number.isInteger,
-            message: 'Debe ser un número entero'
-        }
+            message: 'It must be an integer number'
+        },
+        required: true
     },
     largeCompartments: {
         type: Number,
         validate: {
             validator: Number.isInteger,
-            message: 'Debe ser un número entero'
-        }
+            message: 'It must be an integer number'
+        },
+        required: true
     }
 })
 module.exports = model("Locker", LockerSchema, "lockers");
