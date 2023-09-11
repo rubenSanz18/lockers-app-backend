@@ -14,16 +14,27 @@ const create = (req, res) => {
             status: "Error",
             message: "You must be an administrator"
         })
-    let locker = new Locker(params);
-    locker.save().then((lockerCreated) => {
-        if(!lockerCreated)
-            return res.status(500).json({
+    Locker.findOne({$and: [
+        {"address.city": params.address.city},
+        {name: params.name}
+    ]}).exec()
+    .then((locker) => {
+        if(locker)
+            return res.status(400).json({
                 status: "Error",
+                message: "There is another locker with the same name in this city. Please, change the name"
             })
-        return res.status(200).json({
-            status: "Success",
-            message: "Locker created correctly",
-            lockerCreated
+        let lockerToSave = new Locker(params);
+        lockerToSave.save().then((lockerCreated) => {
+            if(!lockerCreated)
+                return res.status(500).json({
+                    status: "Error",
+                })
+            return res.status(200).json({
+                status: "Success",
+                message: "Locker created correctly",
+                lockerCreated
+            })
         })
     })
     .catch((error) => {
