@@ -89,10 +89,10 @@ const getAllLockersCity = (req, res) => {
     Locker.find({city: req.body.city})
         .exec()
         .then((lockers) => {
-            if(!lockers)
+            if(lockers.length === 0)
                 return res.status(400).json({
-                    status: "Error",
-                    message: "There is no locker in" + req.body.city
+                    status: "Success",
+                    message: "There is no locker in " +req.body.city
                 })
             return res.status(200).json({
                 status: "Success",
