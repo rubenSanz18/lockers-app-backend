@@ -79,7 +79,35 @@ const get = (req, res) => {
         })
 }
 
+const getAllLockersCity = (req, res) => {
+    if(!req.body.city)
+        return res.status(400).json({
+            status: "Error",
+            message: "Please, introduce a city"
+        })
+    Locker.find({city: req.body.city})
+        .exec()
+        .then((lockers) => {
+            if(!lockers)
+                return res.status(400).json({
+                    status: "Error",
+                    message: "There is no locker in" + req.body.city
+                })
+            return res.status(200).json({
+                status: "Success",
+                lockers
+            })
+        })
+        .catch((error) => {
+            return res.status(500).json({
+                status: "Error",
+                error
+            })
+        })
+}
+
 module.exports = {
     create,
-    get
+    get,
+    getAllLockersCity
 }
