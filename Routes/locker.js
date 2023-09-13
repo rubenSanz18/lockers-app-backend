@@ -7,5 +7,6 @@ const locker = require("../Models/locker");
 router.post("/create", auth.auth, lockerController.create);
 router.get("/get/:id", lockerController.get);
 router.get("/getLockersCity", lockerController.getAllLockersCity);
+router.delete("/delete/:id", auth.auth, lockerController.deleteLocker);
 
 module.exports = router;
