@@ -57,6 +57,29 @@ const create = async (req, res) => {
     }
 }
 
+const get = (req, res) => {
+    Locker.findOne({_id: req.params.id})
+        .exec()
+        .then((locker) => {
+            if(!locker)
+                return res.status(400).json({
+                    status: "Error",
+                    message: "Locker don't found. Please, check the id"
+                })
+            return res.status(200).json({
+                status: "Success",
+                locker
+            })
+        })
+        .catch((error) => {
+            res.status(500).json({
+                status: "Error",
+                error
+            })
+        })
+}
+
 module.exports = {
-    create
+    create,
+    get
 }
