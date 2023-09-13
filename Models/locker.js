@@ -6,26 +6,12 @@ const LockerSchema = Schema({
         required: true
     },
     address: {
-        street: {
-            type: String,
-            required: true
-        },
-        postalCode: {
-            type: Number,
-            validate: {
-                validator: Number.isInteger,
-                message: 'It must be an integer number'
-            },
-            required: true
-        },
-        city: {
-            type: String,
-            required: true
-        },
-        country: {
-            type: String,
-            required: true
-        }
+        type: String,
+        required: true
+    },
+    city: {
+        type: String,
+        required:true
     },
     smallCompartments: {
         type: Number,
