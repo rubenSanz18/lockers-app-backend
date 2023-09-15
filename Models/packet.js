@@ -1,16 +1,18 @@
 const {Schema, model} = require("mongoose");
+const moment = require("moment");
 
 const PacketSchema = Schema({
-    weight: {
-        type: Number,
-        required: true
-    },
-    arrivalDate: {
+    orderDate: {
         type: Date,
         default: Date.now
     },
-    userMail: {
-        type: String,
+    arrivalDate:  {
+        type: Date,
+        default: () => moment().add(2, "days").toDate()
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
         required: true
     },
     locker: {

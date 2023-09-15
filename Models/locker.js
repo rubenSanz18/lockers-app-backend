@@ -13,7 +13,7 @@ const LockerSchema = Schema({
         type: String,
         required:true
     },
-    smallCompartments: {
+    compartments: {
         type: Number,
         validate: {
             validator: Number.isInteger,
@@ -21,13 +21,9 @@ const LockerSchema = Schema({
         },
         required: true
     },
-    largeCompartments: {
-        type: Number,
-        validate: {
-            validator: Number.isInteger,
-            message: 'It must be an integer number'
-        },
-        required: true
-    }
+    packets: [{
+        type: Schema.Types.ObjectId,
+        ref: "Packet"
+    }]
 })
 module.exports = model("Locker", LockerSchema, "lockers");

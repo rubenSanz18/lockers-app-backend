@@ -6,7 +6,7 @@ const create = async (req, res) => {
     let params = req.body;
     let user = req.user;
 
-    if(!params.name | !params.address | !params.smallCompartments | !params.largeCompartments)
+    if(!params.name | !params.address | !params.compartments)
         return res.status(400).json({
             status: "Error",
             message: "Please, complete all fields"
