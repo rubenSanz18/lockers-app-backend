@@ -36,4 +36,5 @@ app.listen(port, () => {
 //updateStatus is executed every hour
 cron.schedule("0 * * * *", async () => {
     await packetController.updateStatus();
+    await packetController.checkTimeOutDate();
 });

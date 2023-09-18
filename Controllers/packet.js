@@ -151,9 +151,26 @@ const pickUp = (req, res) => {
         })
 }
 
+const checkTimeOutDate = async () => {
+    const packetsTimeOut = await Packet.find({$and: [
+        {status: "Ready for pick up"},
+        {arrivalDate: {$lte : new Date(Date.now() - 48 * 60 * 60 *1000)}}
+    ]})
+
+    packetsTimeOut.forEach(async (packet) => {
+        Packet.findOneAndUpdate({_id: packet.id}, {status: "Timed out"}, {new: true}).exec();
+        Locker.findOneAndUpdate({_id: packet.locker}, {$pull: {packets: packet.id}, $inc: {compartments: +1}}, {new: true}).exec();
+        User.findOne({_id: packet.user}).exec()
+            .then((user) => {
+                mail.sendMail(user.email, "Packet timed out", "48h have passed since the packet was delivered to the locker. Please re-order the packet")
+            })
+    })
+}
+
 module.exports = {
     order,
     cancel,
     updateStatus,
-    pickUp
+    pickUp,
+    checkTimeOutDate
 }
