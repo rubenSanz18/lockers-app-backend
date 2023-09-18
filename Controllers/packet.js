@@ -66,7 +66,7 @@ const cancel = (req, res) => {
                 status: "Error",
                 message: "Packet don't found"
             })
-        if(dateValidator.checkDate(packet.arrivalDate)){
+        if(dateValidator.checkDate(packet.orderDate)){
             User.findOneAndUpdate({_id: req.user.id}, {$pull: {packets: packet.id}}, {new: true}).exec();
             Locker.findOneAndUpdate({_id: packet.locker}, {$pull: {packets: packet.id}}, {new: true}).exec();
             Packet.deleteOne({_id: packet.id}).exec();
@@ -86,7 +86,34 @@ const cancel = (req, res) => {
     })
 }
 
+const updateStatus = async () => {
+    const packets = await Packet.find({status: {$nin: ["Ready to pick up", "Picked up", "Timed out"]}});
+    packets.forEach(async (packet) => {
+        const dateDiff = moment().diff(packet.orderDate, "hours");
+
+        if(dateDiff >= 16){
+            let newStatus;
+            switch (packet.status) {
+                case "Preparing":
+                    newStatus = "Ready for delivery";
+                    break;
+                case "Ready for delivery":
+                    newStatus = "On the way to the locker";
+                    break;
+                case "On the way to the locker":
+                    newStatus = "Ready to pick up";
+                    break;
+                default:
+                    newStatus = packet.status;
+                    break;
+              }
+            await Packet.findOneAndUpdate({_id: packet.id}, {$set: {status: newStatus}}, {new: true}).exec();
+        }
+    })
+}
+
 module.exports = {
     order,
-    cancel
+    cancel,
+    updateStatus
 }

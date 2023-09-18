@@ -2,6 +2,8 @@
 const {connection} = require("./Database/connection");
 const express = require("express");
 const cors = require("cors");
+const cron = require("node-cron");
+const packetController = require("./Controllers/packet");
 
 //Connection to the database
 connection();
@@ -29,4 +31,9 @@ app.use("/api/locker", lockerRoutes);
 //Server listens to HTTP Requests
 app.listen(port, () => {
     console.log("Server is running at port " + port);
+});
+
+//updateStatus is executed every 16 hours
+cron.schedule("0 */16 * * *", async () => {
+    await packetController.updateStatus();
 });
