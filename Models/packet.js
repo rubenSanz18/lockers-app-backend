@@ -31,6 +31,11 @@ const PacketSchema = Schema({
             "Timed out"
         ],
         default: "Preparing"
+    },
+    pin: {
+        type: String,
+        minlength: 4,
+        maxlength: 4
     }
 })
 module.exports = model("Packet", PacketSchema, "packets");

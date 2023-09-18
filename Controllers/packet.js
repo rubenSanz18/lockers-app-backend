@@ -3,6 +3,7 @@ const User = require("../Models/user");
 const Locker = require("../Models/locker");
 const compValidator = require("../Validation/compartments");
 const dateValidator = require("../Validation/date");
+const mail = require("../Services/nodemailer");
 
 const order = (req, res) => {
     let params = req.body;
@@ -20,6 +21,7 @@ const order = (req, res) => {
                 .then((updatedUser) => {
                     Locker.findOneAndUpdate({_id: params.locker}, {$push: {packets: savedPacket.id}, $inc: {compartments: -1}}, {new: true}).exec()
                         .then((updatedLocker) => {
+                            mail.sendMail(updatedUser.email, "Order completed", "" +updatedUser.firstName+ "\nYour packet will be stored in " +updatedLocker.name+ " in " +updateStatus.address+ " in 48h. We will send you your PIN code to pick up your packet");
                             return res.status(200).json({
                                 status: "Success",
                                 message: "New order created",
@@ -70,6 +72,7 @@ const cancel = (req, res) => {
             User.findOneAndUpdate({_id: req.user.id}, {$pull: {packets: packet.id}}, {new: true}).exec();
             Locker.findOneAndUpdate({_id: packet.locker}, {$pull: {packets: packet.id}}, {new: true}).exec();
             Packet.deleteOne({_id: packet.id}).exec();
+            mail.sendMail(req.user.email, "Order cancel", "" +req.user.firstName+ "\nYour order has been cancelled");
             return res.status(200).json({
                 status: "Success",
                 user: {
@@ -102,6 +105,18 @@ const updateStatus = async () => {
                     break;
                 case "On the way to the locker":
                     newStatus = "Ready to pick up";
+                    const pin = Math.floor(1000 + Math.random() * 9000).toString();
+                    packet.pin = pin;
+                    Packet.findOne({_id: packet.id})
+                        .populate("user")
+                        .populate("locker")
+                        .exec()
+                        .then((packet) => {
+                            const user = packet.user;
+                            const locker = packet.locker;
+
+                            mail.sendMail(user.email, "Your packet is ready to pick up", "" +user.firstName+ "\nYour packet is stored in " +locker.name+ " in " +locker.address+ ".\nYour PIN code to pick up your packet is: " +pin+ "\nRemember that you have 48h to pick up your packet. If not it will be brought back to our offices");
+                        })
                     break;
                 default:
                     newStatus = packet.status;
