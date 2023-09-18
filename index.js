@@ -33,7 +33,7 @@ app.listen(port, () => {
     console.log("Server is running at port " + port);
 });
 
-//updateStatus is executed every 16 hours
-cron.schedule("0 */16 * * *", async () => {
+//updateStatus is executed every hour
+cron.schedule("0 * * * *", async () => {
     await packetController.updateStatus();
 });
