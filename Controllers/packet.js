@@ -1,8 +1,7 @@
 const Packet = require("../Models/packet");
 const User = require("../Models/user");
 const Locker = require("../Models/locker");
-const compValidator = require("../Validation/compartments");
-const dateValidator = require("../Validation/date");
+const validator = require("../Validation/compartments");
 
 const order = (req, res) => {
     let params = req.body;
@@ -12,7 +11,7 @@ const order = (req, res) => {
             status: "Error",
             message: "Please, complete all fields"
         })
-    if(compValidator.enoughCompartments(params.locker)){
+    if(validator.enoughCompartments(params.locker)){
         params.user = req.user.id;
         let newPacket = new Packet(params);
         newPacket.save().then((savedPacket) => {
@@ -54,39 +53,6 @@ const order = (req, res) => {
     }
 }
 
-const cancel = (req, res) => {
-    Packet.findOne({ $and: [
-        {_id: req.params.id},
-        {user: req.user.id}
-    ]})
-    .exec()
-    .then((packet) => {
-        if(!packet)
-            return res.status(400).json({
-                status: "Error",
-                message: "Packet don't found"
-            })
-        if(dateValidator.checkDate(packet.arrivalDate)){
-            User.findOneAndUpdate({_id: req.user.id}, {$pull: {packets: packet.id}}, {new: true}).exec();
-            Locker.findOneAndUpdate({_id: packet.locker}, {$pull: {packets: packet.id}}, {new: true}).exec();
-            Packet.deleteOne({_id: packet.id}).exec();
-            return res.status(200).json({
-                status: "Success",
-                user: {
-                    name: req.user.firstName,
-                    packets: req.user.packets
-                }
-            })
-        } else{
-            return res.status(400).json({
-                status: "Error",
-                message: "This packet can't be cancelled because it passed more than 24h"
-            })
-        }
-    })
-}
-
 module.exports = {
-    order,
-    cancel
+    order
 }
