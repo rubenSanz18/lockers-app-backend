@@ -127,8 +127,33 @@ const updateStatus = async () => {
     })
 }
 
+const pickUp = (req, res) => {
+    if(!req.body.pin)
+        return res.status(400).json({
+            status: "Error",
+            message: "Please insert your PIN Code"
+        })
+    Packet.findOneAndUpdate({$and: [
+        {locker: req.params.id},
+        {pin: req.body.pin}
+    ]}, {status: "Picked up"}, {new: true}).exec()
+        .then((packet) => {
+            if(!packet)
+                return res.status(400).json({
+                    status: "Error",
+                    message: "There is no packet in this locker with this PIN Code"
+                })
+            Locker.findOneAndUpdate({_id: req.params.id}, {$pull: {packets: packet.id}, $inc: {compartments: +1}}, {new: true}).exec();
+            return res.status(200).json({
+                status: "Success",
+                message: "You have picked up your packet correctly"
+            })
+        })
+}
+
 module.exports = {
     order,
     cancel,
-    updateStatus
+    updateStatus,
+    pickUp
 }
